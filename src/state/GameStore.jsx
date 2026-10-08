@@ -1,5 +1,12 @@
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
-import { hobbySeeds, levelFromXp, player, todolistSeed } from '../data/mock'
+import {
+  focusMinutesSeed,
+  goalSeeds,
+  hobbySeeds,
+  levelFromXp,
+  player,
+  todolistSeed,
+} from '../data/mockData'
 import { GameContext } from './GameContext'
 
 /* ------------------------------------------------------------------ *
@@ -16,6 +23,8 @@ const initialState = () => ({
   player: { ...clone(player), level: levelFromXp(player.xp) },
   todos: clone(todolistSeed),
   hobbies: clone(hobbySeeds),
+  goals: clone(goalSeeds),
+  focusMinutes: focusMinutesSeed,
   questsDone: player.questsDone,
 })
 
@@ -33,8 +42,13 @@ function readStored() {
         ...(parsed.player || {}),
         level: levelFromXp((parsed.player || base.player).xp),
       },
-      todos: parsed.todos || base.todos,
+      // Merge per-key so a payload saved by an older build (no `yesterday`
+      // column, no goals) can never crash the dashboard.
+      todos: { ...base.todos, ...(parsed.todos || {}) },
       hobbies: Array.isArray(parsed.hobbies) ? parsed.hobbies : base.hobbies,
+      goals: Array.isArray(parsed.goals) ? parsed.goals : base.goals,
+      focusMinutes:
+        typeof parsed.focusMinutes === 'number' ? parsed.focusMinutes : base.focusMinutes,
       questsDone: parsed.questsDone ?? base.questsDone,
     }
   } catch {
@@ -173,6 +187,38 @@ function reducer(state, action) {
 
     case 'hobby/remove':
       return { ...state, hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id) }
+
+    /* ---------------- Goals ---------------- */
+    case 'goal/add': {
+      const title = action.title.trim()
+      if (!title) return state
+      const goal = {
+        id: uid('g'),
+        title,
+        desc: (action.desc || '').trim(),
+        category: action.category || 'Personal',
+        tint: 'violet',
+        progress: 0,
+      }
+      return { ...state, goals: [goal, ...state.goals] }
+    }
+
+    case 'goal/progress':
+      return {
+        ...state,
+        goals: state.goals.map((goal) =>
+          goal.id === action.id
+            ? { ...goal, progress: Math.min(100, goal.progress + (action.step || 10)) }
+            : goal,
+        ),
+      }
+
+    case 'goal/remove':
+      return { ...state, goals: state.goals.filter((goal) => goal.id !== action.id) }
+
+    /* ---------------- Focus timer ---------------- */
+    case 'focus/log':
+      return { ...state, focusMinutes: state.focusMinutes + Math.max(0, action.minutes || 0) }
 
     /* ---------------- Progression ---------------- */
     case 'xp/award': {

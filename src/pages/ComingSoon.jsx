@@ -1,13 +1,12 @@
 import { Link, useLocation } from 'react-router-dom'
 import Icon from '../components/Icon'
-import TopBar from '../components/TopBar'
+import Navbar from '../components/layout/Navbar'
 import ToastStack from '../components/ToastStack'
 
 const TITLES = {
   community: 'Community Space',
   academics: 'Academics',
-  challenges: 'Personalized Challenges',
-  hobbies: 'Hobbies',
+  'code-red': 'Code Red',
 }
 
 const BLURB = {
@@ -17,15 +16,22 @@ const BLURB = {
   'community/academics-scholars': 'Academics Scholars — study rooms, exam squads and notes.',
   'academics/subjects': 'Subjects — courses, assignments, exams and study sessions.',
   'academics/progress-analysis': 'Progress Analysis — completion rates, consistency and time split.',
-  challenges: 'Adaptive daily, weekly and personalized challenges with difficulty scaling.',
-  hobbies: 'Every hobby you track, in one catalogue.',
+  'code-red':
+    'Code Red — the emergency productivity mode for when a day is going sideways. It becomes its own feature in a later milestone.',
 }
 
-const tint = (path) => (path.startsWith('/community') ? 'cyan' : path.startsWith('/academics') ? 'gold' : path.startsWith('/hobbies') ? 'pink' : 'mint')
+const tint = (path) =>
+  path.startsWith('/code-red')
+    ? 'red'
+    : path.startsWith('/community')
+      ? 'cyan'
+      : path.startsWith('/academics')
+        ? 'gold'
+        : 'violet'
 
 /**
- * Stub target for every sub-category that redirects somewhere else.
- * Kept styled so navigation feels continuous instead of 404-ish.
+ * Stub target for every destination whose full flow isn't built yet.
+ * Styled so navigation feels continuous instead of 404-ish.
  */
 export default function ComingSoon() {
   const { pathname } = useLocation()
@@ -35,25 +41,26 @@ export default function ComingSoon() {
 
   return (
     <>
-      <TopBar />
+      <Navbar />
       <main className="page">
         <section className={`soon soon--${color}`}>
           <div className="soon__glow" aria-hidden="true" />
           <span className="tag tag--violet">
-            <Icon name="spark" size={13} /> Placeholder route
+            <Icon name="spark" size={13} /> Coming later
           </span>
           <h1 className="soon__title">{section}</h1>
-          <p className="soon__blurb">{BLURB[pathname.slice(1)] ?? 'This screen is on the roadmap.'}</p>
+          <p className="soon__blurb">
+            {BLURB[pathname.slice(1)] ?? 'This screen is on the roadmap.'}
+          </p>
 
           <div className="soon__card">
             <span className="soon__lock">
-              <Icon name="lock" size={22} />
+              <Icon name={color === 'red' ? 'shield' : 'lock'} size={22} />
             </span>
-            <h2>Routing comes with the API Gateway</h2>
+            <h2>Reserved for a later milestone</h2>
             <p>
-              This destination is reserved. It fills in once the matching microservice answers
-              through the Gateway — Community, Academics, Hobbies and Challenge Services land in
-              later milestones.
+              The full experience for this destination is designed next — for now this placeholder
+              keeps navigation continuous while the rest of VexusIQ comes together.
             </p>
             <div className="soon__actions">
               <Link to="/dashboard" className="btn btn--primary">

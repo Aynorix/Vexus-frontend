@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import Icon from './Icon'
-import { academicLinks } from '../data/mock'
+import { academicLinks } from '../data/mockData'
 
 /* ------------------------------------------------------------------ *
  * Academics — Subjects and Progress Analysis, both always visible and
@@ -12,8 +12,7 @@ export default function AcademicsPanel() {
     <div className="subpanel">
       <p className="subpanel__hint">
         <Icon name="cap" size={15} />
-        Study data lives behind the Academics Service. Open either view for the full
-        breakdown.
+        Open either view for the full breakdown of your study life.
       </p>
 
       <ul className="subcards subcards--wide">

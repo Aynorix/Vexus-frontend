@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import Icon from './Icon'
 import { useGame } from '../state/GameContext'
 
@@ -24,8 +23,7 @@ export default function HobbiesPanel() {
     <div className="subpanel">
       <p className="subpanel__hint">
         <Icon name="spark" size={15} />
-        Add the extra-curriculars you actually want to keep. Cross one to drop it; click one to
-        open the full hobby page.
+        Add the extra-curriculars you actually want to keep. Cross one to drop it.
       </p>
 
       <form className="hobbyform" onSubmit={submit}>
@@ -50,7 +48,7 @@ export default function HobbiesPanel() {
         <ul className="hobbylist">
           {hobbies.map((hobby) => (
             <li key={hobby.id} className={`hobbyitem hobbyitem--${hobby.tint}`}>
-              <Link to="/hobbies" className="hobbyitem__link">
+              <div className="hobbyitem__link">
                 <span className="hobbyitem__icon">
                   <Icon name={hobby.icon} size={18} />
                 </span>
@@ -63,7 +61,7 @@ export default function HobbiesPanel() {
                 <span className="hobbyitem__go">
                   <Icon name="chevron" size={17} />
                 </span>
-              </Link>
+              </div>
               <button
                 type="button"
                 className="task__del"
@@ -77,11 +75,6 @@ export default function HobbiesPanel() {
         </ul>
       )}
 
-      <Link to="/hobbies" className="subpanel__footerlink">
-        <Icon name="grid" size={15} />
-        Browse every hobby on the hobbies page
-        <Icon name="arrow" size={16} />
-      </Link>
     </div>
   )
 }

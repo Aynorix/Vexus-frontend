@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import Icon from './Icon'
-import { communities } from '../data/mock'
+import { communities } from '../data/mockData'
 
 const fmt = (n) => (n >= 1000 ? `${(n / 1000).toFixed(1).replace('.0', '')}k` : n)
 
@@ -14,8 +14,7 @@ export default function CommunityPanel() {
     <div className="subpanel">
       <p className="subpanel__hint">
         <Icon name="users" size={15} />
-        Pick your circle. Each space is a separate community page — routing lands in a later
-        milestone.
+        Pick your circle — each space opens its own community page.
       </p>
 
       <ul className="subcards">
